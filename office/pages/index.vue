@@ -1,25 +1,25 @@
 <template>
   <div>
-    <section class="section">
-      <section class="container">
+    <section class="section fullheight">
+      <section class="container has-text-centered fullheight">
         <div>
-          <h1 class="title">
+          <h1 class="has-text-weight-bold is-size-1 my-font">
             Office Quick Reference
           </h1>
-          <h2 class="subtitle">
+          <h2 class="subtitle is-size-3 my-font">
             Find your favorite lines from The Office
           </h2>
           <div class="field has-addons ">
             <div class="control is-expanded">
               <input 
                 v-model="text"
-                class="input is-large" 
+                class="input" 
                 type="text"
                 @keyup.enter="grabData(text)">
             </div>
             <div class="control">
               <button 
-                class="button is-large is-info"
+                class="button is-info"
                 @click="grabData(text)" >
                 Search
               </button>
@@ -44,7 +44,9 @@
         </div>
       </section>
     </section>
-    <div class="footer has-text-centered">
+    <div 
+      style="bottom: 0; left: 0; right: 0; position: relative;" 
+      class="footer has-text-centered has-background-white">
       <p>Made by <a href="https://jlyon.org">Joseph Lyon.</a> Check it out on <a href="https://github.com/jlyon1/office">Github</a></p>
     </div>
   </div>
@@ -68,10 +70,18 @@ export default {
       return this.results.slice(0).sort(compare)
     }
   },
+  mounted() {
+    if (this.$router.app._route.query.search != undefined) {
+      this.text = this.$router.app._route.query.search
+      this.grabData(this.text)
+    }
+  },
   methods: {
     grabData(query) {
+      this.$router.push('/?search=' + encodeURIComponent(query))
+
       fetch(
-        '/office/search?query=' + encodeURIComponent(query)
+        'http://localhost:8080/office/search?query=' + encodeURIComponent(query)
       )
         .then(resp => {
           return resp.json()
@@ -88,32 +98,16 @@ export default {
 }
 </script>
 <style>
-.container {
-  min-height: 75vh;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-}
-
-.title {
+.my-font {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
 }
 
 .links {
   padding-top: 15px;
+}
+
+.fullheight {
+  min-height: 100%;
 }
 </style>
