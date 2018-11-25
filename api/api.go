@@ -43,6 +43,7 @@ func (a *API) Search(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	}
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(str)
 }
 
