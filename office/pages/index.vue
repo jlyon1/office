@@ -71,7 +71,7 @@ export default {
   methods: {
     grabData(query) {
       fetch(
-        'http://localhost:8080/office/search?query=' + encodeURIComponent(query)
+        '/office/search?query=' + encodeURIComponent(query)
       )
         .then(resp => {
           return resp.json()

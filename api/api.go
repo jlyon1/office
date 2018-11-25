@@ -25,6 +25,9 @@ func New(episodes search.Episodes) *API {
 	r.Route("/office", func(r chi.Router) {
 		r.Get("/search", api.Search)
 	})
+
+	r.Method("GET", "/_nuxt/*", http.FileServer(http.Dir("office/dist/")))
+	r.Get("/", api.IndexHandler)
 	api.handler = r
 	return api
 }
@@ -45,6 +48,11 @@ func (a *API) Search(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(str)
+}
+
+// IndexHandler serves the index page.
+func (a *API) IndexHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "office/dist/index.html")
 }
 
 // Run starts the server
