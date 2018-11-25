@@ -2,6 +2,7 @@ package search
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/jlyon1/office/episode"
 	"github.com/jlyon1/office/loader"
@@ -15,6 +16,7 @@ type Episodes struct {
 
 // New returns a new episodes object
 func New(episodes []episode.Episode) *Episodes {
+	fmt.Println(len(episodes))
 	return &Episodes{
 		episodes: episodes,
 	}
@@ -35,18 +37,24 @@ func (e *Episodes) Query(pattern string) []Result {
 		data = e.episodes[i].GetLines()
 
 		matches := fuzzy.Find(pattern, data)
+		sort.Slice(matches, func(i, j int) bool {
+			return matches[i].Score < matches[j].Score
+		})
+
 		if len(matches) > 0 {
 			var r Result
 			r.Episode = e.episodes[i]
 			for _, match := range matches {
-				if match.Score < 5000 {
+
+				if match.Score < 10000 {
 					continue
 				}
-				fmt.Println(match.Str)
 				r.Lines = append(r.Lines, match.Str)
+				r.Rank += match.Score
 			}
-			fmt.Println()
-			ret = append(ret, r)
+			if len(r.Lines) > 0 {
+				ret = append(ret, r)
+			}
 		}
 	}
 	return ret

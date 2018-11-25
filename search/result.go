@@ -8,4 +8,5 @@ import (
 type Result struct {
 	Episode episode.Episode
 	Lines   []string
+	Rank    int
 }
