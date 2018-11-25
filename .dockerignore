@@ -1,0 +1,3 @@
+office/node_modules/*
+office/dist/*
+.nuxt/*
